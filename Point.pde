@@ -6,8 +6,8 @@ public class Point {
    private float mass;
    private float radius;
    
-   public Point(float x, float z, float mass, float radius) {
-      this.position = new PVector(x, 0, z);
+   public Point(float x, float y, float z, float mass, float radius) {
+      this.position = new PVector(x, y, z);
       this.velocity = new PVector();
       this.netForce = new PVector();
       this.mass = mass;
@@ -30,9 +30,21 @@ public class Point {
       netForce.add(force);
    }
    
+   public void applyForce(float fX, float fY, float fZ) {
+      netForce.add(fX, fY, fZ);
+   }
+   
    public void display() {
       noStroke();
       fill(255);
       ellipse(position.x, position.y, radius * 2, radius * 2);
+   }
+   
+   public PVector getPosition() {
+      return position;
+   }
+   
+   public PVector getVelocity() {
+      return velocity;
    }
 }
