@@ -16,7 +16,9 @@ void draw() {
    canvas.beginDraw();
    canvas.background(0);
    
-   s.display(canvas);
+   canvas.textSize(12);
+   canvas.textAlign(LEFT, TOP);
+   canvas.text("" + Keyboard.keyDown[UP], 0, 0);
    
    canvas.endDraw();
    
