@@ -1,2 +1,3 @@
 # Labyrinth
-Help guide Theseus to safety as he explores the Labyrinth!
+
+Protect Theseus on his quest through the Minotaur's labyrinth!
