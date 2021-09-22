@@ -1,5 +1,6 @@
 PGraphics canvas;
 PhysicsManager pm;
+Clew clew;
 
 void setup() {
    size(800, 600);
@@ -7,7 +8,10 @@ void setup() {
    frameRate(60);
    
    canvas = createGraphics(400, 300);
+   
    pm = new PhysicsManager();
+   
+   clew = new Clew(pm);
 }
 
 void draw() {
@@ -16,9 +20,7 @@ void draw() {
    canvas.beginDraw();
    canvas.background(0);
    
-   canvas.textSize(12);
-   canvas.textAlign(LEFT, TOP);
-   canvas.text("" + Keyboard.keyDown[UP], 0, 0);
+   clew.display(canvas);
    
    canvas.endDraw();
    

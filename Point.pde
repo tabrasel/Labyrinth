@@ -34,10 +34,9 @@ public class Point {
       netForce.add(fX, fY, fZ);
    }
    
-   public void display() {
-      noStroke();
-      fill(255);
-      ellipse(position.x, position.y, radius * 2, radius * 2);
+   public void display(PGraphics canvas) {
+      canvas.noStroke();
+      canvas.ellipse(position.x, position.z, radius * 2, radius * 2);
    }
    
    public PVector getPosition() {
