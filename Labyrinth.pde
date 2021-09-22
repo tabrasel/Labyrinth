@@ -1,24 +1,17 @@
 PGraphics canvas;
-
-Point p1, p2;
-Spring s;
+PhysicsManager pm;
 
 void setup() {
    size(800, 600);
    noSmooth();
    frameRate(60);
-
-   canvas = createGraphics(400, 300);
    
-   p1 = new Point(200, 0, 140, 1, 1);
-   p2 = new Point(200, 0, 160, 1, 1);
-   s = new Spring(p1, p2, 30, 0.05, 0.05);
+   canvas = createGraphics(400, 300);
+   pm = new PhysicsManager();
 }
 
 void draw() {
-   s.applyForce();
-   p1.update();
-   p2.update();
+   pm.update();
    
    canvas.beginDraw();
    canvas.background(0);

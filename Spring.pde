@@ -13,7 +13,7 @@ public class Spring {
       this.damping = damping;
    }
 
-   public void applyForce() {
+   public void update() {
       // Get endpoint positions
       PVector p1Pos = p1.getPosition();
       PVector p2Pos = p2.getPosition();
