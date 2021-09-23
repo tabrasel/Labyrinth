@@ -5,8 +5,8 @@ public class Clew {
    
    private Point looseEnd, theseusEnd;
    
-   private final int springCount = 10;
-   private final float springTargetLength = 5;
+   private final int springCount = 30;
+   private final float springTargetLength = 8;
    private final float springStrength = 0.5;
    private final float springDamping = 0.1;
    

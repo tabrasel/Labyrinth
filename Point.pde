@@ -15,11 +15,20 @@ public class Point {
    }
    
    public void update() {
+      // Apply friction force
+      float frictionForceX = velocity.x * -1 * mass * 0.04;
+      float frictionForceY = velocity.y * -1 * mass * 0.04;
+      float frictionForceZ = velocity.z * -1 * mass * 0.04;
+      applyForce(frictionForceX, frictionForceY, frictionForceZ);
+      
       // Calculate acceleration
       PVector acceleration = netForce.div(mass);
       
       // Update velocity and position
       velocity.add(acceleration);
+      
+      //velocity.mult(0.98);
+      
       position.add(velocity);
       
       // Reset net force
