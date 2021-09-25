@@ -20,7 +20,7 @@ void draw() {
    canvas.beginDraw();
    canvas.background(0);
    
-   canvas.textSize(12);
+   canvas.textSize(10);
    canvas.textAlign(LEFT, TOP);
    canvas.fill(255, 255, 255);
    canvas.text(int(frameRate), 0, 0);

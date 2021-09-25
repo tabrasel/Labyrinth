@@ -13,17 +13,20 @@ public class Link {
       PVector p1Position = p1.getPosition();
       PVector p2Position = p2.getPosition();
       
+      float p1InvMass = 1.0 / p1.getMass();
+      float p2InvMass = 1.0 / p2.getMass();
+      
       float positionDeltaX = p2Position.x - p1Position.x;
       float positionDeltaY = p2Position.y - p1Position.y;
       float positionDeltaZ = p2Position.z - p1Position.z;
       
       float positionDeltaMag = sqrt(sq(positionDeltaX) + sq(positionDeltaY) + sq(positionDeltaZ));
 
-      float diffRatio = (positionDeltaMag - targetLength) / positionDeltaMag;
+      float diffRatio = (positionDeltaMag - targetLength) / (positionDeltaMag * (p1InvMass + p2InvMass));
       
       // Update point positions
-      p1Position.add(positionDeltaX * 0.5 * diffRatio, positionDeltaY * 0.5 * diffRatio, positionDeltaZ * 0.5 * diffRatio);
-      p2Position.sub(positionDeltaX * 0.5 * diffRatio, positionDeltaY * 0.5 * diffRatio, positionDeltaZ * 0.5 * diffRatio);
+      p1Position.add(p1InvMass * positionDeltaX * diffRatio, p1InvMass * positionDeltaY * diffRatio, p1InvMass * positionDeltaZ * diffRatio);
+      p2Position.sub(p2InvMass * positionDeltaX * diffRatio, p2InvMass * positionDeltaY * diffRatio, p2InvMass * positionDeltaZ * diffRatio);
    }
    
    public void display(PGraphics canvas) {

@@ -17,19 +17,19 @@ public class Point {
    }
    
    public void update() {
-      applyForce(velocity.x * -0.005, velocity.y * -0.005, velocity.z * -0.005);
-      
-      // Calculate acceleration
-      PVector acceleration = netForce.div(mass);
-      
-      //acceleration.add(0, 0, 0.1);
-      
       // Store current position
       float tempPositionX = position.x;
       float tempPositionY = position.y;
       float tempPositionZ = position.z;
       
+      // Update current velocity
       velocity.set(position.x - oldPosition.x, position.y - oldPosition.y, position.z - oldPosition.z);
+      
+      // Apply ground friction
+      applyForce(velocity.x * -0.05, velocity.y * -0.05, velocity.z * -0.05);
+      
+      // Calculate acceleration
+      PVector acceleration = netForce.div(mass);
       
       // Update position
       position.x += (position.x - oldPosition.x) + acceleration.x;
@@ -62,5 +62,9 @@ public class Point {
    
    public PVector getVelocity() {
       return velocity;
+   }
+   
+   public float getMass() {
+      return mass;
    }
 }
