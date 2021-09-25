@@ -1,6 +1,7 @@
 public class Point {
    
    private PVector position;
+   private PVector oldPosition;
    private PVector velocity;
    private PVector netForce;
    private float mass;
@@ -8,28 +9,35 @@ public class Point {
    
    public Point(float x, float y, float z, float mass, float radius) {
       this.position = new PVector(x, y, z);
-      this.velocity = new PVector();
+      this.oldPosition = new PVector(x, y, z);
+      this.velocity = this.position.copy().sub(this.oldPosition);
       this.netForce = new PVector();
       this.mass = mass;
       this.radius = radius;
    }
    
    public void update() {
-      // Apply friction force
-      float frictionForceX = velocity.x * -1 * mass * 0.04;
-      float frictionForceY = velocity.y * -1 * mass * 0.04;
-      float frictionForceZ = velocity.z * -1 * mass * 0.04;
-      applyForce(frictionForceX, frictionForceY, frictionForceZ);
+      applyForce(velocity.x * -0.005, velocity.y * -0.005, velocity.z * -0.005);
       
       // Calculate acceleration
       PVector acceleration = netForce.div(mass);
       
-      // Update velocity and position
-      velocity.add(acceleration);
+      //acceleration.add(0, 0, 0.1);
       
-      //velocity.mult(0.98);
+      // Store current position
+      float tempPositionX = position.x;
+      float tempPositionY = position.y;
+      float tempPositionZ = position.z;
       
-      position.add(velocity);
+      velocity.set(position.x - oldPosition.x, position.y - oldPosition.y, position.z - oldPosition.z);
+      
+      // Update position
+      position.x += (position.x - oldPosition.x) + acceleration.x;
+      position.y += (position.y - oldPosition.y) + acceleration.y;
+      position.z += (position.z - oldPosition.z) + acceleration.z;
+      
+      // Update old position
+      oldPosition.set(tempPositionX, tempPositionY, tempPositionZ);
       
       // Reset net force
       netForce.set(0, 0, 0);

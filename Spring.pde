@@ -48,7 +48,7 @@ public class Spring {
       float p2RelVelY = p2Vel.y - p1Vel.y;
       float p2RelVelZ = p2Vel.z - p1Vel.z;
       
-      // Calculate the spring's force on its endpoints 
+      // Calculate the spring's force on its endpoints (elastic force - friction force)
       float p1ForceX = strength * (p1TargetX - p1Pos.x) - p1RelVelX * damping;
       float p1ForceY = strength * (p1TargetY - p1Pos.y) - p1RelVelY * damping;
       float p1ForceZ = strength * (p1TargetZ - p1Pos.z) - p1RelVelZ * damping;

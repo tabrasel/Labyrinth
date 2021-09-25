@@ -1,37 +1,35 @@
 public class Clew {
    
    private ArrayList<Point> points;
-   private ArrayList<Spring> springs;
+   private ArrayList<Link> links;
    
    private Point looseEnd, theseusEnd;
    
-   private final int springCount = 30;
-   private final float springTargetLength = 8;
-   private final float springStrength = 0.5;
-   private final float springDamping = 0.1;
+   private final int linkCount = 50;
+   private final float linkTargetLength = 5;
    
    public Clew(PhysicsManager pm) {
       points = new ArrayList<Point>();
-      springs = new ArrayList<Spring>();
+      links = new ArrayList<Link>();
       
-      looseEnd = new Point(0, 0, 100, 20, 3);
+      looseEnd = new Point(100, 0, 100, 10, 3);
       points.add(looseEnd);
       pm.addPoint(looseEnd);
       
-      for (int i = 1; i < springCount; i++) {
-         Point point = new Point(i * springTargetLength, 0, 100, 1, 2);
+      for (int i = 1; i < linkCount; i++) {
+         Point point = new Point(100 + i % 2, 0, 100, 1, 1);
          points.add(point);
          pm.addPoint(point);
       }
       
-      theseusEnd = new Point((springCount + 1) * springTargetLength, 0, 100, 500, 5);
+      theseusEnd = new Point(100 , 0, 100, 1000, 5);
       points.add(theseusEnd);
       pm.addPoint(theseusEnd);
       
-      for (int i = 0; i < springCount; i++) {
-         Spring spring = new Spring(points.get(i), points.get(i + 1), springTargetLength, springStrength, springDamping);
-         springs.add(spring);
-         pm.addSpring(spring);
+      for (int i = 0; i < linkCount; i++) {
+         Link link = new Link(points.get(i), points.get(i + 1), linkTargetLength);
+         links.add(link);
+         pm.addLink(link);
       }
    }
    
@@ -52,8 +50,8 @@ public class Clew {
          looseEnd.applyForce(2.5, 0, 0);
       }
       
-      for (Spring spring : springs) {
-         spring.display(canvas);
+      for (Link link : links) {
+         link.display(canvas);
       }
       
       canvas.fill(255, 0, 0);
