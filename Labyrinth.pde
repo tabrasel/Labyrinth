@@ -1,5 +1,7 @@
 PGraphics canvas;
 PhysicsManager pm;
+
+Maze maze;
 Clew clew;
 
 void setup() {
@@ -11,6 +13,7 @@ void setup() {
    
    pm = new PhysicsManager();
    
+   maze = new Maze(pm);
    clew = new Clew(pm);
 }
 
@@ -20,12 +23,13 @@ void draw() {
    canvas.beginDraw();
    canvas.background(0);
    
+   maze.display(canvas);
+   clew.display(canvas);
+   
    canvas.textSize(10);
    canvas.textAlign(LEFT, TOP);
    canvas.fill(255, 255, 255);
    canvas.text(int(frameRate), 0, 0);
-   
-   clew.display(canvas);
    
    canvas.endDraw();
    
