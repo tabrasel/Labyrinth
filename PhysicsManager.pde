@@ -2,12 +2,14 @@ public class PhysicsManager {
    
    private ArrayList<Point> points;
    private ArrayList<Link> links;
+   private ArrayList<Wall> walls;
    
-   private final int RELAXATION_ITERATIONS = 20;
+   private final int RELAXATION_ITERATIONS = 30;
    
    public PhysicsManager() {
       points = new ArrayList<Point>();
       links = new ArrayList<Link>();
+      walls = new ArrayList<Wall>();
    }
    
    public void update() {
@@ -23,7 +25,7 @@ public class PhysicsManager {
             link.update();
          }
          
-         // Apply environment constraints
+         // Apply wall constraints
       }
    }
    
@@ -33,5 +35,9 @@ public class PhysicsManager {
    
    public void addLink(Link link) {
       links.add(link);
+   }
+   
+   public void addWall(Wall wall) {
+      walls.add(wall);
    }
 }

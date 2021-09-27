@@ -7,15 +7,17 @@ public class Maze {
    private final int CELL_SIZE = 20;
    
    private MazeNode[][] nodes;
+   private ArrayList<Wall> walls;
    
    public Maze(PhysicsManager pm) {
       nodes = new MazeNode[ROW_COUNT][COL_COUNT];
-      
       for (int row = 0; row < ROW_COUNT; row++) {
          for (int col = 0; col < COL_COUNT; col++) {
             nodes[row][col] = new MazeNode(col, row);
          }
       }
+      
+      walls = new ArrayList<Wall>();
       
       generate();
       createWalls(pm);
@@ -49,26 +51,40 @@ public class Maze {
          for (int col = 0; col < COL_COUNT; col++) {
             MazeNode node = nodes[row][col];
             
+            float nodeX = col * CELL_SIZE;
+            float nodeY = row * CELL_SIZE;
+            
             if (node.west == null) {
-               float x = col * CELL_SIZE - CELL_SIZE / 2;
-               canvas.line(x, row * CELL_SIZE - CELL_SIZE / 2, x, row * CELL_SIZE + CELL_SIZE / 2);
+               float x = nodeX - CELL_SIZE / 2;
+               Wall wall = new Wall(new PVector(x, 1, nodeY - CELL_SIZE / 2), new PVector(x, 1, nodeY + CELL_SIZE / 2));
+               walls.add(wall);
+               pm.addWall(wall);
+               //canvas.line(x, row * CELL_SIZE - CELL_SIZE / 2, x, row * CELL_SIZE + CELL_SIZE / 2);
             }
             
             if (node.north == null) {
-               float y = row * CELL_SIZE - CELL_SIZE / 2;
-               canvas.line(col * CELL_SIZE - CELL_SIZE / 2, y, col * CELL_SIZE + CELL_SIZE / 2, y);
-            }
-            
-            if (node.south == null && row == ROW_COUNT - 1) {
-               float y = row * CELL_SIZE + CELL_SIZE / 2;
-               canvas.line(col * CELL_SIZE - CELL_SIZE / 2, y, col * CELL_SIZE + CELL_SIZE / 2, y);
+               float y = nodeY - CELL_SIZE / 2;
+               Wall wall = new Wall(new PVector(nodeX - CELL_SIZE / 2, 1, y), new PVector(nodeX + CELL_SIZE / 2, 1, y));
+               walls.add(wall);
+               pm.addWall(wall);
+               //canvas.line(col * CELL_SIZE - CELL_SIZE / 2, y, col * CELL_SIZE + CELL_SIZE / 2, y);
             }
             
             if (node.east == null && col == COL_COUNT - 1) {
-               float x = col * CELL_SIZE + CELL_SIZE / 2;
-               canvas.line(x, row * CELL_SIZE - CELL_SIZE / 2, x, row * CELL_SIZE + CELL_SIZE / 2);
+               float x = nodeX + CELL_SIZE / 2;
+               Wall wall = new Wall(new PVector(x, 1, nodeY - CELL_SIZE / 2), new PVector(x, 1, nodeY + CELL_SIZE / 2));
+               walls.add(wall);
+               pm.addWall(wall);
+               //canvas.line(x, row * CELL_SIZE - CELL_SIZE / 2, x, row * CELL_SIZE + CELL_SIZE / 2);
             }
             
+            if (node.south == null && row == ROW_COUNT - 1) {
+               float y = nodeY + CELL_SIZE / 2;
+               Wall wall = new Wall(new PVector(nodeX - CELL_SIZE / 2, 1, y), new PVector(nodeX + CELL_SIZE / 2, 1, y));
+               walls.add(wall);
+               pm.addWall(wall);
+               //canvas.line(col * CELL_SIZE - CELL_SIZE / 2, y, col * CELL_SIZE + CELL_SIZE / 2, y);
+            }
          }
       }
    }
@@ -79,31 +95,8 @@ public class Maze {
    
    public void display(PGraphics canvas) {
       canvas.stroke(200, 130, 0);
-      for (int row = 0; row < ROW_COUNT; row++) {
-         for (int col = 0; col < COL_COUNT; col++) {
-            MazeNode node = nodes[row][col];
-            
-            if (node.west == null) {
-               float x = col * CELL_SIZE - CELL_SIZE / 2;
-               canvas.line(x, row * CELL_SIZE - CELL_SIZE / 2, x, row * CELL_SIZE + CELL_SIZE / 2);
-            }
-            
-            if (node.north == null) {
-               float y = row * CELL_SIZE - CELL_SIZE / 2;
-               canvas.line(col * CELL_SIZE - CELL_SIZE / 2, y, col * CELL_SIZE + CELL_SIZE / 2, y);
-            }
-            
-            if (node.south == null && row == ROW_COUNT - 1) {
-               float y = row * CELL_SIZE + CELL_SIZE / 2;
-               canvas.line(col * CELL_SIZE - CELL_SIZE / 2, y, col * CELL_SIZE + CELL_SIZE / 2, y);
-            }
-            
-            if (node.east == null && col == COL_COUNT - 1) {
-               float x = col * CELL_SIZE + CELL_SIZE / 2;
-               canvas.line(x, row * CELL_SIZE - CELL_SIZE / 2, x, row * CELL_SIZE + CELL_SIZE / 2);
-            }
-            
-         }
+      for (Wall wall : walls) {
+         wall.display(canvas);
       }
    }
    
