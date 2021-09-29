@@ -8,13 +8,15 @@ public class Wall {
       this.dimensions = dimensions;
    }
    
-   public void display(PGraphics canvas) {
-      //canvas.line(p1.x, p1.z, p2.x, p2.z);
-      float topLeftX = position.x - dimensions.x / 2;
-      float topLeftY = position.z - dimensions.z / 2;
+   public void display(PGraphics canvas, Camera camera) {
+      float canvasTopLeftX = camera.getPosition().x - camera.getDimensions().x / 2;
+      float canvasTopLeftY = camera.getPosition().z - camera.getDimensions().y / 2;
+      
+      float topLeftX = (position.x - dimensions.x / 2) - canvasTopLeftX;
+      float topLeftY = (position.z - dimensions.z / 2) - canvasTopLeftY;
       
       noStroke();
-      canvas.rect(position.x - dimensions.x / 2, position.z - dimensions.z / 2, dimensions.x, dimensions.z);
+      canvas.rect(topLeftX, topLeftY, dimensions.x, dimensions.z);
    }
    
 }

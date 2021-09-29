@@ -29,13 +29,21 @@ public class Link {
       p2Position.sub(p2InvMass * positionDeltaX * diffRatio, p2InvMass * positionDeltaY * diffRatio, p2InvMass * positionDeltaZ * diffRatio);
    }
    
-   public void display(PGraphics canvas) {
+   public void display(PGraphics canvas, Camera camera) {
       // Get endpoint positions
       PVector p1Pos = p1.getPosition();
       PVector p2Pos = p2.getPosition();
       
+      float canvasTopLeftX = camera.getPosition().x - camera.getDimensions().x / 2;
+      float canvasTopLeftY = camera.getPosition().z - camera.getDimensions().y / 2;
+      
+      float canvasX1 = p1Pos.x - canvasTopLeftX;
+      float canvasY1 = p1Pos.z - canvasTopLeftY;
+      float canvasX2 = p2Pos.x - canvasTopLeftX;
+      float canvasY2 = p2Pos.z - canvasTopLeftY;
+      
       // Draw spring
       canvas.stroke(255, 0, 0);
-      canvas.line(p1Pos.x, p1Pos.z, p2Pos.x, p2Pos.z);
+      canvas.line(canvasX1, canvasY1, canvasX2, canvasY2);
    }
 }

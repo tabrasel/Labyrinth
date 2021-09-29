@@ -51,8 +51,8 @@ public class Maze {
          for (int col = 0; col < COL_COUNT; col++) {
             MazeNode node = nodes[row][col];
             
-            float nodeX = col * CELL_SIZE;
-            float nodeY = row * CELL_SIZE;
+            float nodeX = col * CELL_SIZE + CELL_SIZE / 2;
+            float nodeY = row * CELL_SIZE + CELL_SIZE / 2;
             
             if (node.west == null) {
                float x = nodeX - CELL_SIZE / 2;
@@ -89,11 +89,11 @@ public class Maze {
       return col > -1 && col < COL_COUNT && row > -1 && row < ROW_COUNT;
    } //<>//
    
-   public void display(PGraphics canvas) {
+   public void display(PGraphics canvas, Camera camera) {
       canvas.noStroke();
       canvas.fill(200, 130, 0);
       for (Wall wall : walls) {
-         wall.display(canvas);
+         wall.display(canvas, camera);
       }
    }
    

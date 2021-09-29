@@ -26,7 +26,7 @@ public class Point {
       velocity.set(position.x - oldPosition.x, position.y - oldPosition.y, position.z - oldPosition.z);
       
       // Apply ground friction
-      applyForce(velocity.x * -0.05, velocity.y * -0.05, velocity.z * -0.05);
+      //applyForce(velocity.x * -0.05, velocity.y * -0.05, velocity.z * -0.05);
       
       // Calculate acceleration
       PVector acceleration = netForce.div(mass);
@@ -51,9 +51,15 @@ public class Point {
       netForce.add(fX, fY, fZ);
    }
    
-   public void display(PGraphics canvas) {
+   public void display(PGraphics canvas, Camera camera) {
+      float canvasTopLeftX = camera.getPosition().x - camera.getDimensions().x / 2;
+      float canvasTopLeftY = camera.getPosition().z - camera.getDimensions().y / 2;
+      
+      float canvasX = position.x - canvasTopLeftX;
+      float canvasY = position.z - canvasTopLeftY;
+      
       canvas.noStroke();
-      canvas.ellipse(position.x, position.z, radius * 2, radius * 2);
+      canvas.ellipse(canvasX, canvasY, radius * 2, radius * 2);
    }
    
    public PVector getPosition() {

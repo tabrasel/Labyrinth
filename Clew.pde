@@ -22,7 +22,7 @@ public class Clew {
          pm.addPoint(point);
       }
       
-      theseusEnd = new Point(100 , 0, 100, 100, 5);
+      theseusEnd = new Point(100 , 0, 100, 10, 5);
       points.add(theseusEnd);
       pm.addPoint(theseusEnd);
       
@@ -33,7 +33,7 @@ public class Clew {
       }
    }
    
-   public void display(PGraphics canvas) {
+   public void display(PGraphics canvas, Camera camera) {
       if (Keyboard.isKeyDown(UP)) {
          looseEnd.applyForce(0, 0, -0.4);
       }
@@ -52,13 +52,13 @@ public class Clew {
       
       canvas.strokeWeight(1);
       for (Link link : links) {
-         link.display(canvas);
+         link.display(canvas, camera);
       }
       
       canvas.fill(255, 0, 0);
-      looseEnd.display(canvas);
+      looseEnd.display(canvas, camera);
       
       canvas.fill(0, 255, 0);
-      theseusEnd.display(canvas);
+      theseusEnd.display(canvas, camera);
    }
 }
