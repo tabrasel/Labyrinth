@@ -26,7 +26,7 @@ public class Point {
       velocity.set(position.x - oldPosition.x, position.y - oldPosition.y, position.z - oldPosition.z);
       
       // Apply ground friction
-      //applyForce(velocity.x * -0.05, velocity.y * -0.05, velocity.z * -0.05);
+      applyForce(velocity.x * -0.01, velocity.y * -0.01, velocity.z * -0.01);
       
       // Calculate acceleration
       PVector acceleration = netForce.div(mass);
@@ -41,6 +41,10 @@ public class Point {
       
       // Reset net force
       netForce.set(0, 0, 0);
+   }
+   
+   public void setVelocity(float fx, float fy, float fz) {
+      oldPosition.set(position.x - fx, position.y - fy, position.z - fz);
    }
    
    public void applyForce(PVector force) {
@@ -60,6 +64,10 @@ public class Point {
       
       canvas.noStroke();
       canvas.ellipse(canvasX, canvasY, radius * 2, radius * 2);
+   }
+   
+   public void setPosition(float x, float y, float z) {
+      position.set(x, y, z);
    }
    
    public PVector getPosition() {

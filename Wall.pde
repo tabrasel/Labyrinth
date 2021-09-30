@@ -19,4 +19,12 @@ public class Wall {
       canvas.rect(topLeftX, topLeftY, dimensions.x, dimensions.z);
    }
    
+   public PVector getPosition() {
+      return position;
+   }
+   
+   public PVector getDimensions() {
+      return dimensions;
+   }
+   
 }

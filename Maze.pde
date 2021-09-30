@@ -5,6 +5,8 @@ public class Maze {
    private final int ROW_COUNT = 12;
    private final int COL_COUNT = 14;
    private final int CELL_SIZE = 20;
+   private final int WALL_LENGTH = 20;
+   private final int WALL_THICKNESS = 5;
    
    private MazeNode[][] nodes;
    private ArrayList<Wall> walls;
@@ -56,28 +58,28 @@ public class Maze {
             
             if (node.west == null) {
                float x = nodeX - CELL_SIZE / 2;
-               Wall wall = new Wall(new PVector(x, 0, nodeY), new PVector(2, 0, CELL_SIZE));
+               Wall wall = new Wall(new PVector(x, 0, nodeY), new PVector(WALL_THICKNESS, 0, WALL_LENGTH));
                walls.add(wall);
                pm.addWall(wall);
             }
             
             if (node.north == null) {
                float y = nodeY - CELL_SIZE / 2;
-               Wall wall = new Wall(new PVector(nodeX, 0, y), new PVector(CELL_SIZE, 0, 2));
+               Wall wall = new Wall(new PVector(nodeX, 0, y), new PVector(WALL_LENGTH, 0, WALL_THICKNESS));
                walls.add(wall);
                pm.addWall(wall);
             }
             
             if (node.east == null && col == COL_COUNT - 1) {
                float x = nodeX + CELL_SIZE / 2;
-               Wall wall = new Wall(new PVector(x, 0, nodeY), new PVector(2, 0, CELL_SIZE));
+               Wall wall = new Wall(new PVector(x, 0, nodeY), new PVector(WALL_THICKNESS, 0, WALL_LENGTH));
                walls.add(wall);
                pm.addWall(wall);
             }
             
             if (node.south == null && row == ROW_COUNT - 1) {
                float y = nodeY + CELL_SIZE / 2;
-               Wall wall = new Wall(new PVector(nodeX, 0, y), new PVector(CELL_SIZE, 0, 2));
+               Wall wall = new Wall(new PVector(nodeX, 0, y), new PVector(WALL_LENGTH, 0, WALL_THICKNESS));
                walls.add(wall);
                pm.addWall(wall);
             }

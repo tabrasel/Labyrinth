@@ -14,9 +14,9 @@ void setup() {
    pm = new PhysicsManager();
    
    maze = new Maze(pm);
-   clew = new Clew(pm);
+   clew = new Clew(10, 10, pm);
    
-   camera = new Camera(new PVector(140, 0, 140), new PVector(400, 300));
+   camera = new Camera(new PVector(0, 0, 0), new PVector(400, 300));
 }
 
 void draw() {
