@@ -6,7 +6,7 @@ public class Maze {
    private final int COL_COUNT = 14;
    private final int CELL_SIZE = 20;
    private final int WALL_LENGTH = 20;
-   private final int WALL_THICKNESS = 5;
+   private final int WALL_THICKNESS = 3;
    
    private MazeNode[][] nodes;
    private ArrayList<Wall> walls;

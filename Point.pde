@@ -81,4 +81,8 @@ public class Point {
    public float getMass() {
       return mass;
    }
+   
+   public float getRadius() {
+      return radius;
+   }
 }

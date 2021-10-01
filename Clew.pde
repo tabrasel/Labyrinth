@@ -5,19 +5,19 @@ public class Clew {
    
    private Point looseEnd, theseusEnd;
    
-   private final int linkCount = 30;
-   private final float linkTargetLength = 3;
+   private final int linkCount = 30; //
+   private final float linkTargetLength = 5;
    
    public Clew(float x, float z, PhysicsManager pm) {
       points = new ArrayList<Point>();
       links = new ArrayList<Link>();
       
-      looseEnd = new Point(x, 0, z, 1, 2);
+      looseEnd = new Point(x, 0, z, 1, 4);
       points.add(looseEnd);
       pm.addPoint(looseEnd);
       
       for (int i = 1; i < linkCount; i++) {
-         Point point = new Point(x + i % 2, 0, z, 0.05, 1);
+         Point point = new Point(x + i % 2, 0, z, 0.05, 2);
          points.add(point);
          pm.addPoint(point);
       }
