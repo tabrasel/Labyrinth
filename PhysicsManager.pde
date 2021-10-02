@@ -27,84 +27,34 @@ public class PhysicsManager {
          
          // Apply wall constraints to points
          for (Point point : points) {
+            ArrayList<Wall> nearWalls = walls; // TODO: Only collide with neighboring walls
             
-            PVector pointPos = point.getPosition();
-            
-            ArrayList<Wall> nearWalls = walls; // TODO: Just check for collisions with walls near the point
-            
-            for (Wall wall : nearWalls) {
-               float wallLeftX = wall.getPosition().x - wall.getDimensions().x / 2;
-               float wallRightX = wall.getPosition().x + wall.getDimensions().x / 2;
-               float wallTopZ = wall.getPosition().z - wall.getDimensions().z / 2;
-               float wallBottomZ = wall.getPosition().z + wall.getDimensions().z / 2;
-               
-               /*
-               // If the point center isn't inside the wall
-               if (pointPos.x >= wallLeftX && pointPos.x <= wallRightX && pointPos.z >= wallTopZ && pointPos.z <= wallBottomZ) {
-                  // Find the wall corner closest to the point
-                  float closestCornerX = constrain(pointPos.x, wallLeftX, wallRightX);
-                  float closestCornerZ = constrain(pointPos.z, wallTopZ, wallBottomZ);
-                  
-                  // Calculate the normal of the axis between the point and the corner closest to it
-                  PVector pointToCornerNormal = new PVector(-(pointPos.z - closestCornerZ), 0, pointPos.x - closestCornerX);
-                  separatingAxisNormals.add(pointToCornerNormal);
-               }
-               */
-               
-               PVector wallHorizontalEdgesNormal = new PVector(0, 0, 1); // Normal of axis between point and horizontal wall edges
-               PVector wallVerticalEdgesNormal = new PVector(1, 0, 0); // Normal of axis between point and vertical wall edges
-               
-               // Create a list of all separating axis normals
-               ArrayList<PVector> separatingAxisNormals = new ArrayList<PVector>();
-               separatingAxisNormals.add(wallHorizontalEdgesNormal);
-               separatingAxisNormals.add(wallVerticalEdgesNormal);
+            for (Wall wall : nearWalls) {          
+               // Get the normal of each separating axis
+               ArrayList<PVector> separatingAxisNormals = getSeparatingAxesNormals(point, wall);
                
                // A list to store all the vectors that could be used to push the point out of the wall
                ArrayList<PVector> pushVectors = new ArrayList<PVector>();
                
                // For each separating axis normal
-               for (PVector axisNormal : separatingAxisNormals) {
+               for (PVector separatingAxisNormal : separatingAxisNormals) {                  
+                  // Project the point along the separating axis normal
+                  float[] pointProj = projectPointAlongAxis(point, separatingAxisNormal);
                   
-                  // Project the point onto the axis normal
-                  
-                  //// Find point extremeties
-                  PVector pointExtremety1 = pointPos.copy().add(axisNormal.copy().mult(point.getRadius()));
-                  PVector pointExtremety2 = pointPos.copy().sub(axisNormal.copy().mult(point.getRadius()));
-                  
-                  //// Calculate the projection magnitude of each point extremety on the axis normal
-                  float pointExtremety1Proj = pointExtremety1.dot(axisNormal);
-                  float pointExtremety2Proj = pointExtremety2.dot(axisNormal);
-                  
-                  //// Find the min and max point projection magnitudes
-                  float pointMinProj = min(pointExtremety1Proj, pointExtremety2Proj);
-                  float pointMaxProj = max(pointExtremety1Proj, pointExtremety2Proj);
-                  
-                  // Project the wall onto the axis normal
-                  
-                  //// Find wall extremeties
-                  PVector wallExtremety1 = new PVector(wallLeftX, 0, wallTopZ);
-                  PVector wallExtremety2 = new PVector(wallLeftX, 0, wallBottomZ);
-                  PVector wallExtremety3 = new PVector(wallRightX, 0, wallTopZ);
-                  PVector wallExtremety4 = new PVector(wallRightX, 0, wallBottomZ);
-                  
-                  //// Calculate the projection magnitude of each wall extremety on the axis normal
-                  float[] wallExtremetyProjs = { wallExtremety1.dot(axisNormal), wallExtremety2.dot(axisNormal), wallExtremety3.dot(axisNormal), wallExtremety4.dot(axisNormal) };
-                  
-                  //// Find the min and max wall projection magnitudes
-                  float wallMinProj = min(wallExtremetyProjs);
-                  float wallMaxProj = max(wallExtremetyProjs);
+                  // Project the wall along the separating axis normal
+                  float[] wallProj = projectWallAlongAxis(wall, separatingAxisNormal);
                   
                   // If the point and wall projections don't overlap, then they aren't colliding
-                  if (pointMaxProj < wallMinProj || pointMinProj > wallMaxProj) break;
+                  if (!projectionsOverlap(pointProj, wallProj)) break;
                   
                   // If the projections *do* overlap, create a push vector in whichever direction is shortest
-                  if (abs(wallMinProj - pointMaxProj) < abs(wallMaxProj - pointMinProj)) {
-                     float pushVectorMag = wallMinProj - pointMaxProj;
-                     PVector pushVector = axisNormal.copy().mult(pushVectorMag);
+                  if (abs(wallProj[0] - pointProj[1]) < abs(wallProj[1] - pointProj[0])) {
+                     float pushVectorMag = wallProj[0] - pointProj[1];
+                     PVector pushVector = separatingAxisNormal.copy().mult(pushVectorMag);
                      pushVectors.add(pushVector);
                   } else {
-                     float pushVectorMag = wallMaxProj - pointMinProj;
-                     PVector pushVector = axisNormal.copy().mult(pushVectorMag);
+                     float pushVectorMag = wallProj[1] - pointProj[0];
+                     PVector pushVector = separatingAxisNormal.copy().mult(pushVectorMag);
                      pushVectors.add(pushVector);
                   }
                }
@@ -120,41 +70,12 @@ public class PhysicsManager {
                   }
                   
                   // Apply the shortest push vector to the point position
-                  point.setPosition(pointPos.x + shortestPushVector.x, pointPos.y + shortestPushVector.y, pointPos.z + shortestPushVector.z);
+                  point.setPosition(
+                     point.getPosition().x + shortestPushVector.x,
+                     point.getPosition().y + shortestPushVector.y,
+                     point.getPosition().z + shortestPushVector.z
+                  );
                }
-               
-               /*
-               float wallLeftX = wall.getPosition().x - wall.getDimensions().x / 2;
-               float wallRightX = wall.getPosition().x + wall.getDimensions().x / 2;
-               float wallTopZ = wall.getPosition().z - wall.getDimensions().z / 2;
-               float wallBottomZ = wall.getPosition().z + wall.getDimensions().z / 2;
-               
-               // Check if point is inside wall
-               if (pointPos.x >= wallLeftX && pointPos.x <= wallRightX && pointPos.z >= wallTopZ && pointPos.z <= wallBottomZ) {
-                  // Calculate the vectors needed to project the point out of each wall edge
-                  PVector[] projs = {
-                     new PVector(wallLeftX - pointPos.x, 0, 0),  // Project to left edge
-                     new PVector(wallRightX - pointPos.x, 0, 0), // Project to right edge
-                     new PVector(0, 0, wallTopZ - pointPos.z),   // Project to top edge
-                     new PVector(0, 0, wallBottomZ - pointPos.z) // Project to bottom edge
-                  };
-                  
-                  // Find the shortest projection vector
-                  int minProjIndex = 0;
-                  float minProjMag = projs[0].mag();
-                  for (int j = 0; j < projs.length; j++) {
-                     float projMag = projs[j].mag();
-                     if (projMag < minProjMag) {
-                        minProjMag = projMag;
-                        minProjIndex = j;
-                     }
-                  }
-                  
-                  // Project the point out
-                  PVector minProj = projs[minProjIndex];
-                  point.setPosition(pointPos.x + minProj.x, pointPos.y + minProj.y, pointPos.z + minProj.z);
-               }  
-               */
             }
          }
          
@@ -162,6 +83,98 @@ public class PhysicsManager {
          for (Link link : links) {
          }
       }
+   }
+   
+   /**
+    * Gets the normal of each separating axis between a point and a wall.
+    */
+   public ArrayList<PVector> getSeparatingAxesNormals(Point point, Wall wall) {
+      ArrayList<PVector> separatingAxesNormals = new ArrayList<PVector>();
+      
+      // Include normal of axis between point and horizontal wall edges
+      PVector wallHorizontalEdgesNormal = new PVector(0, 0, 1);
+      separatingAxesNormals.add(wallHorizontalEdgesNormal);
+      
+      // Include normal of axis between point and vertical wall edges
+      PVector wallVerticalEdgesNormal = new PVector(1, 0, 0);
+      separatingAxesNormals.add(wallVerticalEdgesNormal);
+      
+      // Include normal of axis between point and closest wall corner
+      float wallLeftX = wall.getPosition().x - wall.getDimensions().x / 2;
+      float wallRightX = wall.getPosition().x + wall.getDimensions().x / 2;
+      float wallTopZ = wall.getPosition().z - wall.getDimensions().z / 2;
+      float wallBottomZ = wall.getPosition().z + wall.getDimensions().z / 2;
+      
+      // NOTE: Assumes the wall is axis-aligned. Otherwise would have to calculate distances to each corner
+      float closestCornerX = constrain(point.getPosition().x, wallLeftX, wallRightX);
+      float closestCornerZ = constrain(point.getPosition().z, wallTopZ, wallBottomZ);
+      PVector betweenPointAndCornerNormal = new PVector(point.getPosition().x - closestCornerX, 0, point.getPosition().z - closestCornerZ).normalize();
+      separatingAxesNormals.add(betweenPointAndCornerNormal);
+      
+      return separatingAxesNormals;
+   }
+   
+   /**
+    * Calculates the projection of a point along an axis.
+    * @param point the point to project.
+    * @param axis the axis to project the point along. Must be a unit vector.
+    */
+   public float[] projectPointAlongAxis(Point point, PVector axis) {
+      // Find point extremeties
+      PVector extremety1 = point.getPosition().copy().add(axis.copy().mult(point.getRadius()));
+      PVector extremety2 = point.getPosition().copy().sub(axis.copy().mult(point.getRadius()));
+      
+      // Calculate each extremety's projection along the axis
+      float extremety1Proj = extremety1.dot(axis);
+      float extremety2Proj = extremety2.dot(axis);
+      
+      // Find the min/max projection
+      float projMin = min(extremety1Proj, extremety2Proj);
+      float projMax = max(extremety1Proj, extremety2Proj);
+      
+      // Return the min/max projections
+      float[] projection = { projMin, projMax };
+      return projection;
+   }
+   
+   /**
+    * Calculates the projection of a wall along an axis.
+    * @param wall the wall to project.
+    * @param axis the axis to project the wall along. Must be a unit vector.
+    */
+   public float[] projectWallAlongAxis(Wall wall, PVector axis) {
+      float wallLeftX = wall.getPosition().x - wall.getDimensions().x / 2;
+      float wallRightX = wall.getPosition().x + wall.getDimensions().x / 2;
+      float wallTopZ = wall.getPosition().z - wall.getDimensions().z / 2;
+      float wallBottomZ = wall.getPosition().z + wall.getDimensions().z / 2;
+               
+      // Find wall extremeties
+      PVector extremety1 = new PVector(wallLeftX, 0, wallTopZ);
+      PVector extremety2 = new PVector(wallLeftX, 0, wallBottomZ);
+      PVector extremety3 = new PVector(wallRightX, 0, wallTopZ);
+      PVector extremety4 = new PVector(wallRightX, 0, wallBottomZ);
+      
+      // Calculate each extremety's projection along the axis
+      float[] extremetyProjs = { extremety1.dot(axis), extremety2.dot(axis), extremety3.dot(axis), extremety4.dot(axis) };
+      
+      // Find the min/max projections
+      float projMin = min(extremetyProjs);
+      float projMax = max(extremetyProjs);
+      
+      // Return the min/max projections
+      float[] projection = { projMin, projMax }; 
+      return projection;
+   }
+   
+   /**
+    * Test if two projections overlap.
+    */
+   public boolean projectionsOverlap(float[] proj1, float[] proj2) {
+      float proj1Min = proj1[0];
+      float proj1Max = proj1[1];
+      float proj2Min = proj2[0];
+      float proj2Max = proj2[1];
+      return proj1Max > proj2Min && proj1Min < proj2Max;
    }
    
    public void addPoint(Point point) {

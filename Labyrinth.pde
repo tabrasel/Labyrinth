@@ -5,6 +5,7 @@ PhysicsManager pm;
 Maze maze;
 Clew clew;
 
+Point myPoint;
 Wall myWall;
 
 void setup() {
@@ -18,7 +19,10 @@ void setup() {
    maze = new Maze(pm);
    clew = new Clew(10, 10, pm);
    
-   myWall = new Wall(new PVector(50, 0, 40), new PVector(80, 0, 30));
+   //myPoint = new Point(-5, 0, 20, 1, 10);
+   //pm.addPoint(myPoint);
+   
+   //myWall = new Wall(new PVector(40, 0, 60), new PVector(80, 0, 30));
    //pm.addWall(myWall);
    
    camera = new Camera(new PVector(140, 0, 128), new PVector(400, 300));
@@ -30,7 +34,9 @@ void draw() {
    canvas.beginDraw();
    canvas.background(0);
    
+   //myPoint.display(canvas, camera);
    //myWall.display(canvas, camera);
+   
    maze.display(canvas, camera);
    clew.display(canvas, camera);
    

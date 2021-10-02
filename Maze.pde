@@ -2,11 +2,11 @@ import java.util.Stack;
 
 public class Maze {
    
-   private final int ROW_COUNT = 12;
-   private final int COL_COUNT = 14;
-   private final int CELL_SIZE = 20;
-   private final int WALL_LENGTH = 20;
-   private final int WALL_THICKNESS = 3;
+   private final int ROW_COUNT = 4;
+   private final int COL_COUNT = 6;
+   private final int CELL_SIZE = 32;
+   private final int WALL_LENGTH = 32;
+   private final int WALL_THICKNESS = 8;
    
    private MazeNode[][] nodes;
    private ArrayList<Wall> walls;

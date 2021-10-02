@@ -26,10 +26,12 @@ public class Point {
       velocity.set(position.x - oldPosition.x, position.y - oldPosition.y, position.z - oldPosition.z);
       
       // Apply ground friction
-      applyForce(velocity.x * -0.01, velocity.y * -0.01, velocity.z * -0.01);
+      //applyForce(velocity.x * -0.01, velocity.y * -0.01, velocity.z * -0.01);
       
       // Calculate acceleration
       PVector acceleration = netForce.div(mass);
+      
+      acceleration.add(0, 0, 0.02);
       
       // Update position
       position.x += (position.x - oldPosition.x) + acceleration.x;

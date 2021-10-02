@@ -5,24 +5,24 @@ public class Clew {
    
    private Point looseEnd, theseusEnd;
    
-   private final int linkCount = 30; //
-   private final float linkTargetLength = 5;
+   private final int linkCount = 20;
+   private final float linkTargetLength = 6;
    
    public Clew(float x, float z, PhysicsManager pm) {
       points = new ArrayList<Point>();
       links = new ArrayList<Link>();
       
-      looseEnd = new Point(x, 0, z, 1, 4);
+      looseEnd = new Point(x, 0, z, 1, 3);
       points.add(looseEnd);
       pm.addPoint(looseEnd);
       
       for (int i = 1; i < linkCount; i++) {
-         Point point = new Point(x + i % 2, 0, z, 0.05, 2);
+         Point point = new Point(x + i % 2, 0, z, 0.05, 3);
          points.add(point);
          pm.addPoint(point);
       }
       
-      theseusEnd = new Point(x, 0, z, 10, 5);
+      theseusEnd = new Point(x, 0, z, 1, 8);
       points.add(theseusEnd);
       pm.addPoint(theseusEnd);
       
@@ -35,19 +35,19 @@ public class Clew {
    
    public void display(PGraphics canvas, Camera camera) {
       if (Keyboard.isKeyDown(UP)) {
-         looseEnd.applyForce(0, 0, -0.2);
+         looseEnd.applyForce(0, 0, -0.1);
       }
       
       if (Keyboard.isKeyDown(DOWN)) {
-         looseEnd.applyForce(0, 0, 0.2);
+         looseEnd.applyForce(0, 0, 0.1);
       }
       
       if (Keyboard.isKeyDown(LEFT)) {
-         looseEnd.applyForce(-0.2, 0, 0);
+         looseEnd.applyForce(-0.1, 0, 0);
       }
       
       if (Keyboard.isKeyDown(RIGHT)) {
-         looseEnd.applyForce(0.2, 0, 0);
+         looseEnd.applyForce(0.1, 0, 0);
       }
       
       canvas.strokeWeight(1);
