@@ -2,11 +2,14 @@ public class Link {
    
    private Point p1, p2;
    private float targetLength;
+   private PVector normal;
    
    public Link(Point p1, Point p2, float targetLength) {
       this.p1 = p1;
       this.p2 = p2;
       this.targetLength = targetLength;
+      this.normal = new PVector();
+      updateNormal();
    }
    
    public void update() {
@@ -27,6 +30,8 @@ public class Link {
       // Update point positions
       p1Position.add(p1InvMass * positionDeltaX * diffRatio, p1InvMass * positionDeltaY * diffRatio, p1InvMass * positionDeltaZ * diffRatio);
       p2Position.sub(p2InvMass * positionDeltaX * diffRatio, p2InvMass * positionDeltaY * diffRatio, p2InvMass * positionDeltaZ * diffRatio);
+      
+      updateNormal();
    }
    
    public void display(PGraphics canvas, Camera camera) {
@@ -45,5 +50,24 @@ public class Link {
       // Draw spring
       canvas.stroke(255, 0, 0);
       canvas.line(canvasX1, canvasY1, canvasX2, canvasY2);
+   }
+   
+   public void updateNormal() {
+      PVector p1Pos = p1.getPosition();
+      PVector p2Pos = p2.getPosition();
+      this.normal.set(-(p2Pos.z - p1Pos.z), 0, p2Pos.x - p1Pos.x);
+      this.normal.normalize();
+   }
+   
+   public Point getP1() {
+      return p1;
+   }
+   
+   public Point getP2() {
+      return p2;
+   }
+   
+   public PVector getNormal() {
+      return normal;
    }
 }

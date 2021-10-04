@@ -6,6 +6,7 @@ Maze maze;
 Clew clew;
 
 Point myPoint;
+Link myLink;
 Wall myWall;
 
 void setup() {
@@ -22,7 +23,14 @@ void setup() {
    //myPoint = new Point(-5, 0, 20, 1, 10);
    //pm.addPoint(myPoint);
    
-   //myWall = new Wall(new PVector(40, 0, 60), new PVector(80, 0, 30));
+   Point p1 = new Point(0, 0, 10, 1, 1);
+   Point p2 = new Point(40, 0, 10, 1, 1);
+   pm.addPoint(p1);
+   pm.addPoint(p2);
+   //myLink = new Link(p1, p2, 40);
+   //pm.addLink(myLink);
+   
+   //myWall = new Wall(new PVector(70, 0, 60), new PVector(80, 0, 30));
    //pm.addWall(myWall);
    
    camera = new Camera(new PVector(140, 0, 128), new PVector(400, 300));
@@ -35,6 +43,7 @@ void draw() {
    canvas.background(0);
    
    //myPoint.display(canvas, camera);
+   //myLink.display(canvas, camera);
    //myWall.display(canvas, camera);
    
    maze.display(canvas, camera);
@@ -44,8 +53,6 @@ void draw() {
    canvas.textAlign(LEFT, TOP);
    canvas.fill(255, 255, 255);
    canvas.text(int(frameRate), 0, 0);
-   
-   
    
    canvas.endDraw();
    
